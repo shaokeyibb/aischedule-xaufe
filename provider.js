@@ -160,7 +160,7 @@ async function scheduleHtmlProvider() {
         ].map((param) => [
           param.name,
           param.selectedOptions === undefined ||
-          param.selectedOptions[0] === undefined
+            param.selectedOptions[0] === undefined
             ? ""
             : param.selectedOptions[0].value,
         ])
@@ -203,18 +203,14 @@ async function scheduleHtmlProvider() {
   const courseInfos = await res.json();
 
   if (courseInfos.kbList.length === 0) {
-    const conti = await AIScheduleConfirm({
-      title: "无课表信息，仍继续？",
-      contentText:
-        "您选定的学年学期尚无课表，可能是教务尚未同步或您选错了学年学期。仍要继续导入课表吗？",
-      cancelText: "取消",
-      confirmText: "继续",
-    });
+    
+    await AIScheduleAlert({
+      titleText: '找不到课程信息',
+      contentText: '您选定的学年学期无课程，可能是教务尚未同步或您选错了学年学期。'
+    })
 
-    if (!conti) {
-      window.running = false;
-      return "do not continue";
-    }
+    window.running = false;
+    return "do not continue";
   }
 
   return JSON.stringify({
